@@ -1,5 +1,5 @@
-pipeline {
-    agent any
+node {
+    // agent any
     environment {
         // DOCKER_API_VERSION = "1.23"
         DOCKER_API_VERSION = "1.3.0"
@@ -20,7 +20,6 @@ pipeline {
                     def imageName = "${registryHost}${appName}:${tag}"
                     env.BUILDIMG = imageName
                     sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
-                    // sh "docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
                    
                 }
             }
