@@ -25,6 +25,49 @@
 //         sh "kubectl rollout status deployment/hello-kenzan"
 // }
 
+// pipeline {
+//     agent any
+//     environment {
+//         DOCKER_API_VERSION = "1.23"
+//     }
+//     stages {
+//         stage("Checkout") {
+//             steps {
+//                 checkout scm
+//                 sh "git rev-parse --short HEAD > commit-id"
+//             }
+//         }
+//         stage("Build") {
+//             steps {
+//                 sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+//                 // script {
+//                 //     def tag = readFile('commit-id').trim()
+//                 //     def appName = "hello-kenzan"
+//                 //     def registryHost = "127.0.0.1:30400/"
+//                 //     def imageName = "${registryHost}${appName}:${tag}"
+//                 //     env.BUILDIMG = imageName
+//                 //     sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+//                 // }
+//             }
+//         }
+//         stage("Push") {
+//             steps {
+//                 script {
+//                     sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker push ${env.BUILDIMG}"
+//                 }
+//             }
+//         }
+//         stage("Deploy") {
+//             steps {
+//                 script {
+//                     sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${env.BUILDIMG}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+//                     sh "kubectl rollout status deployment/hello-kenzan"
+//                 }
+//             }
+//         }
+//     }
+// }
+
 pipeline {
     agent any
     environment {
@@ -40,30 +83,21 @@ pipeline {
         stage("Build") {
             steps {
                 sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
-                // script {
-                //     def tag = readFile('commit-id').trim()
-                //     def appName = "hello-kenzan"
-                //     def registryHost = "127.0.0.1:30400/"
-                //     def imageName = "${registryHost}${appName}:${tag}"
-                //     env.BUILDIMG = imageName
-                //     sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
-                // }
             }
         }
         stage("Push") {
             steps {
                 script {
-                    sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker push ${env.BUILDIMG}"
+                    sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker push ${imageName}"
                 }
             }
         }
         stage("Deploy") {
             steps {
-                script {
-                    sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${env.BUILDIMG}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
-                    sh "kubectl rollout status deployment/hello-kenzan"
-                }
+                sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${imageName}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+                sh "kubectl rollout status deployment/hello-kenzan"
             }
         }
     }
 }
+
