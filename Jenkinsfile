@@ -1,4 +1,4 @@
-node {
+pipeline {
     // agent any
     environment {
         // DOCKER_API_VERSION = "1.23"
