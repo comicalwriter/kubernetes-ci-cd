@@ -19,7 +19,7 @@ pipeline {
                     def tag = readFile('commit-id').trim()
                     def imageName = "${registryHost}${appName}:${tag}"
                     env.BUILDIMG = imageName
-                    sh "docker build -t ${imageName} applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+                    sh "docker build -f ${imageName} applications/hello-kenzan/Dockerfile applications/hello-kenzan"
                     
                    
                 }
