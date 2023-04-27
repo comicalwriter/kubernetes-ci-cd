@@ -39,14 +39,15 @@ pipeline {
         }
         stage("Build") {
             steps {
-                script {
-                    def tag = readFile('commit-id').trim()
-                    def appName = "hello-kenzan"
-                    def registryHost = "127.0.0.1:30400/"
-                    def imageName = "${registryHost}${appName}:${tag}"
-                    env.BUILDIMG = imageName
-                    sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
-                }
+                sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+                // script {
+                //     def tag = readFile('commit-id').trim()
+                //     def appName = "hello-kenzan"
+                //     def registryHost = "127.0.0.1:30400/"
+                //     def imageName = "${registryHost}${appName}:${tag}"
+                //     env.BUILDIMG = imageName
+                //     sh "sudo apt-get update && sudo apt-get install -y docker.io && sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && sudo sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io && export PATH=$PATH:/usr/local/bin/docker && docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+                // }
             }
         }
         stage("Push") {
