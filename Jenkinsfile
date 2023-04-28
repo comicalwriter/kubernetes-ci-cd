@@ -1,9 +1,15 @@
 pipeline {
     // agent any
+    // agent {
+    //     docker {
+    //         image 'docker:19.03.12'
+    //         args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+    //     }
+    // }
     agent {
         docker {
-            image 'docker:19.03.12'
-            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        image 'docker:20.10.7'
+        args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
     environment {
