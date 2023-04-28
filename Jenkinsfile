@@ -10,12 +10,12 @@ pipeline {
             steps {
                 checkout scm
                 sh "git rev-parse --short HEAD > commit-id"
+                sh "sudo apt-get update && sudo apt-get install -y docker.io"
             }
         }
         stage("Build") {
             steps {
                 script {
-                    // sh "sudo apt-get update && sudo apt-get install -y docker.io"
                     def tag = readFile('commit-id').trim()
                     def imageName = "${registryHost}${appName}:${tag}"
                     echo "Building image ${imageName}"
