@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        env.DOCKER_API_VERSION = "1.3.0"
+        DOCKER_API_VERSION = "1.3.0"
         appName = "hello-kenzan"
         registryHost = "127.0.0.1:30400/"
     }
