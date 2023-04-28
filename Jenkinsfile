@@ -18,10 +18,10 @@ pipeline {
                 script {
                     def tag = readFile('commit-id').trim()
                     def imageName = "${registryHost}${appName}:${tag}"
+                    echo imageName 
+                    echo 'aaaaaaaaaaaaaaaaaaaaaaaaaa'
                     env.BUILDIMG = imageName
                     sh "docker build -f ${imageName} applications/hello-kenzan/Dockerfile applications/hello-kenzan"
-                    
-                   
                 }
             }
         }
