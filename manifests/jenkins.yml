@@ -148,8 +148,8 @@ spec:
         volumeMounts:
         - name: jenkins-persistent-storage
           mountPath: /var/jenkins_home
-        # - name: docker-sock
-        - name:  /var/run/docker.sock
+        - name: docker-sock
+        # - name:  /var/run/docker.sock
           mountPath: /var/run/docker.sock
       volumes:
       - name: jenkins-persistent-storage
