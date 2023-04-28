@@ -1,19 +1,11 @@
 pipeline {
-    // agent any
-    // agent {
-    //     docker {
-    //         image 'docker:19.03.12'
-    //         args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-    //     }
-    // }
     agent {
         docker {
-        image 'docker:20.10.7'
-        args '-v /var/run/docker.sock:/var/run/docker.sock'
+            image 'docker:20.10.7'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
     environment {
-        // DOCKER_API_VERSION = "1.23"
         DOCKER_API_VERSION = "1.3.0"
         appName = "hello-kenzan"
         registryHost = "127.0.0.1:30400/"
@@ -33,7 +25,7 @@ pipeline {
                     echo imageName 
                     echo 'aaaaaaaaaaaaaaaaaaaaaaaaaa'
                     env.BUILDIMG = imageName
-                    sh "docker build -f ${imageName} applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+                    sh "docker build -f applications/hello-kenzan/Dockerfile -t ${imageName} applications/hello-kenzan"
                 }
             }
         }
@@ -54,6 +46,63 @@ pipeline {
         }
     }
 }
+
+// pipeline {
+//     // agent any
+//     // agent {
+//     //     docker {
+//     //         image 'docker:19.03.12'
+//     //         args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+//     //     }
+//     // }
+//     agent {
+//         docker {
+//         image 'docker:20.10.7'
+//         args '-v /var/run/docker.sock:/var/run/docker.sock'
+//         }
+//     }
+//     environment {
+//         // DOCKER_API_VERSION = "1.23"
+//         DOCKER_API_VERSION = "1.3.0"
+//         appName = "hello-kenzan"
+//         registryHost = "127.0.0.1:30400/"
+//     }
+//     stages {
+//         stage("Checkout") {
+//             steps {
+//                 checkout scm
+//                 sh "git rev-parse --short HEAD > commit-id"
+//             }
+//         }
+//         stage("Build") {
+//             steps {
+//                 script {
+//                     def tag = readFile('commit-id').trim()
+//                     def imageName = "${registryHost}${appName}:${tag}"
+//                     echo imageName 
+//                     echo 'aaaaaaaaaaaaaaaaaaaaaaaaaa'
+//                     env.BUILDIMG = imageName
+//                     sh "docker build -f ${imageName} applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+//                 }
+//             }
+//         }
+//         stage("Push") {
+//             steps {
+//                 script {
+//                     sh "docker push ${env.BUILDIMG}"
+//                 }
+//             }
+//         }
+//         stage("Deploy") {
+//             steps {
+//                 script {
+//                     sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${env.BUILDIMG}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+//                     sh "kubectl rollout status deployment/hello-kenzan"
+//                 }
+//             }
+//         }
+//     }
+// }
 
 // node {
 
