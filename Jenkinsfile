@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    // agent any
     environment {
         DOCKER_API_VERSION = "1.3.0"
         appName = "hello-kenzan"
