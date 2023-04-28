@@ -5,6 +5,9 @@ pipeline {
         appName = "hello-kenzan"
         registryHost = "127.0.0.1:30400/"
     }
+    agent {
+        docker { image 'node:16.13.1-alpine' }
+    }
     stages {
         stage("Checkout") {
             steps {
