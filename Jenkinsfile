@@ -1,11 +1,11 @@
 pipeline {
-    agent any
-    // agent {
-    //     docker {
-    //         image 'docker:20.10.24'
-    //         args '-v /var/run/docker.sock:/var/run/docker.sock'
-    //     }
-    // }
+    // agent any
+    agent {
+        docker {
+            image 'docker:20.10.24'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
     environment {
         DOCKER_API_VERSION = "1.3.0"
         appName = "hello-kenzan"
