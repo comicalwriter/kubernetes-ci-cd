@@ -21,7 +21,7 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    sh "su apt-get update && su apt-get install -y docker.io"
+                    sh "sudo apt-get update && sudo apt-get install -y docker.io"
                     def tag = readFile('commit-id').trim()
                     def imageName = "${registryHost}${appName}:${tag}"
                     echo "Building image ${imageName}"
