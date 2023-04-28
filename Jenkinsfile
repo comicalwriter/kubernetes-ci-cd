@@ -10,7 +10,7 @@ pipeline {
             steps {
                 checkout scm
                 sh "git rev-parse --short HEAD > commit-id"
-                sh "apt-get update && apt-get install -y docker.io"
+                // sh "apt-get update && apt-get install -y docker.io"
             }
         }
         stage("Build") {
