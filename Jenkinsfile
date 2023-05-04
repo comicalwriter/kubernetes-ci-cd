@@ -1,13 +1,13 @@
 pipeline {
-    // agent any
+    agent any
     environment {
         DOCKER_API_VERSION = "1.3.0"
         appName = "hello-kenzan"
         registryHost = "127.0.0.1:30400/"
     }
-    agent {
-        docker { image 'node:16.13.1-alpine' }
-    }
+    // agent {
+    //     docker { image 'node:16.13.1-alpine' }
+    // }
     stages {
         stage("Checkout") {
             steps {
