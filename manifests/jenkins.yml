@@ -139,7 +139,10 @@ spec:
       containers:
       - name: jenkins
         # image: chadmoon/jenkins-docker-kubectl:latest
-        image: jenkins/jenkins:lts-jdk11
+        # image: jenkins/jenkins:lts-jdk11
+        # build: ./applications/jenkins_dind/Dockerfile
+        # image: dd348ac7294
+        image: "127.0.0.1:30400/jenkins:lastest"
 
         imagePullPolicy: Always
         ports:
@@ -149,7 +152,6 @@ spec:
         - name: jenkins-persistent-storage
           mountPath: /var/jenkins_home
         - name: docker-sock
-        # - name:  /var/run/docker.sock
           mountPath: /var/run/docker.sock
       volumes:
       - name: jenkins-persistent-storage
