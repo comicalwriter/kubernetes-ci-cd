@@ -8,14 +8,8 @@ pipeline {
     // agent {
     //     docker { image 'node:16.13.1-alpine' }
     // }
-
+    
     stages {
-        stage('Initialize Git') {
-            steps {
-                sh 'git init'
-                sh 'git remote add origin https://github.com/comicalwriter/kubernetes-ci-cd'
-            }
-        }
         stage("Checkout") {
             steps {
                 checkout scm
