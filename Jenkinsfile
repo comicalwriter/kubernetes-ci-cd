@@ -21,7 +21,8 @@ pipeline {
                 script {
                     def tag = readFile('commit-id').trim()
                     def imageName = "${registryHost}${appName}:${tag}"
-                    echo "Building image ${imageName}"
+                    env.BUILDING = imageName
+                    echo "Building image ${env.BUILDING}"
                     sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
                 }
             }
@@ -29,7 +30,8 @@ pipeline {
         stage("Push") {
             steps {
                 script {
-                    sh "docker push ${registryHost}${appName}:${tag}"
+                    // sh "docker push ${registryHost}${appName}"
+                    sh "docker push ${env.BUILDING}"
                 }
             }
         }
