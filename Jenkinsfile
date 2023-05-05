@@ -29,7 +29,7 @@ pipeline {
         stage("Push") {
             steps {
                 script {
-                    sh "docker push ${registryHost}${appName}"
+                    sh "docker push ${registryHost}${appName}:${tag}"
                 }
             }
         }
