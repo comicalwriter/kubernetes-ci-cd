@@ -1,0 +1,25 @@
+# FROM docker:dind
+
+# # Install dependencies
+# RUN apk add --update --no-cache \
+#   bash \
+#   git \
+#   curl \
+#   openjdk8 \
+#   openssh-client
+
+# # Install Jenkins
+# RUN curl -fsSL https://get.jenkins.io/war-stable/latest/jenkins.war -o /usr/share/jenkins/jenkins.war
+
+# # Set up Jenkins user and home directory
+# RUN addgroup -g 1000 jenkins \
+#     && adduser -D -u 1000 -G jenkins -s /bin/bash -h /var/jenkins_home jenkins \
+#     && chown -R jenkins:jenkins /var/jenkins_home
+
+# # Set up Docker sock mount and expose Jenkins port
+# VOLUME /var/run/docker.sock
+# EXPOSE 8080
+
+# # Start Jenkins as the Jenkins user
+# USER jenkins
+# ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war"]

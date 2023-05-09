@@ -1,3 +1,59 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: kr8sswordz
+#   labels:
+#     app: kr8sswordz
+# spec:
+#   ports:
+#     - port: 80
+#       targetPort: 3002
+#   selector:
+#     app: kr8sswordz
+#     tier: kr8sswordz
+#   type: NodePort
+
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: kr8sswordz
+#   labels:
+#     app: kr8sswordz
+# spec:
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: kr8sswordz
+#         tier: kr8sswordz
+#     spec:
+#       containers:
+#       - image: 127.0.0.1:30400/kr8sswordz:latest
+#         name: kr8sswordz
+#         imagePullPolicy: Always
+#         ports:
+#         - containerPort: 3002
+#           name: kr8sswordz
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#  name: kr8sswordz
+# spec:
+#   backend:
+#     serviceName: kr8sswordz
+#     servicePort: 80
+#   rules:
+#   - host: kr8sswordz.192.168.99.100.xip.io
+#     http:
+#       paths:
+#       - path: /
+#         backend:
+#           serviceName: kr8sswordz
+#           servicePort: 80
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,7 +62,8 @@ metadata:
     app: kr8sswordz
 spec:
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 3002
   selector:
     app: kr8sswordz
@@ -14,13 +71,17 @@ spec:
   type: NodePort
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kr8sswordz
   labels:
     app: kr8sswordz
 spec:
+  selector:
+    matchLabels:
+      app: kr8sswordz
+      tier: kr8sswordz
   strategy:
     type: Recreate
   template:
@@ -30,26 +91,27 @@ spec:
         tier: kr8sswordz
     spec:
       containers:
-      - image: 127.0.0.1:30400/kr8sswordz:latest
-        name: kr8sswordz
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3002
-          name: kr8sswordz
+        - name: kr8sswordz
+          image: 127.0.0.1:30400/kr8sswordz:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3002
+
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
- name: kr8sswordz
+  name: kr8sswordz
 spec:
-  backend:
-    serviceName: kr8sswordz
-    servicePort: 80
   rules:
-  - host: kr8sswordz.192.168.99.100.xip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: kr8sswordz
-          servicePort: 80
+    - host: kr8sswordz.192.168.99.100.xip.io  
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kr8sswordz
+                port:
+                  name: http

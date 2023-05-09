@@ -1,10 +1,118 @@
-apiVersion: extensions/v1beta1
+# # apiVersion: extensions/v1beta1
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: puzzle
+#   labels:
+#     app: puzzle
+# spec:
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: puzzle
+#         tier: puzzle
+#     spec:
+#       containers:
+#       - image: 127.0.0.1:30400/puzzle:93faf8a
+#         name: puzzle
+#         imagePullPolicy: Always
+#         lifecycle:
+#           postStart:
+#             exec:
+#               command: ["/up.sh"]
+#           preStop:
+#             exec:
+#               command: ["/down.sh"]        
+#         ports:
+#         - containerPort: 3000
+#           name: puzzle
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: puzzle
+#   labels:
+#     app: puzzle
+# spec:
+#   ports:
+#     - port: 3000
+#       targetPort: 3000
+#   selector:
+#     app: puzzle
+#     tier: puzzle
+#   type: NodePort
+# ---
+# # apiVersion: extensions/v1beta1
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: mongo
+#   labels:
+#     app: mongo
+# spec:
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: mongo
+#         tier: mongo
+#     spec:
+#       containers:
+#       - image: mongo:3.7
+#         name: mongo
+#         imagePullPolicy: Always
+#         ports:
+#         - containerPort: 27017
+#           name: mongo
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mongo
+#   labels:
+#     app: mongo
+# spec:
+#   ports:
+#     - port: 27017
+#       targetPort: 27017
+#   selector:
+#     app: mongo
+#     tier: mongo
+#   type: NodePort
+# ---
+# # apiVersion: extensions/v1beta1
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#  name: puzzle
+# spec:
+#   backend:
+#     serviceName: puzzle
+#     servicePort: 3000
+#   rules:
+#   - host: puzzle.192.168.99.100.xip.io
+#     http:
+#       paths:
+#       - path: /
+#         backend:
+#           serviceName: puzzle
+#           servicePort: 3000
+
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: puzzle
   labels:
     app: puzzle
 spec:
+  selector:
+    matchLabels:
+      app: puzzle
+      tier: puzzle
   strategy:
     type: Recreate
   template:
@@ -14,8 +122,8 @@ spec:
         tier: puzzle
     spec:
       containers:
-      - image: 127.0.0.1:30400/puzzle:latest
-        name: puzzle
+      - name: puzzle
+        image: 127.0.0.1:30400/puzzle:93faf8a
         imagePullPolicy: Always
         lifecycle:
           postStart:
@@ -23,11 +131,10 @@ spec:
               command: ["/up.sh"]
           preStop:
             exec:
-              command: ["/down.sh"]        
+              command: ["/down.sh"]
         ports:
         - containerPort: 3000
           name: puzzle
-
 ---
 apiVersion: v1
 kind: Service
@@ -36,21 +143,26 @@ metadata:
   labels:
     app: puzzle
 spec:
+  type: NodePort
   ports:
-    - port: 3000
-      targetPort: 3000
+  - name: puzzle
+    port: 3000
+    targetPort: 3000
   selector:
     app: puzzle
     tier: puzzle
-  type: NodePort
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo
   labels:
     app: mongo
 spec:
+  selector:
+    matchLabels:
+      app: mongo
+      tier: mongo
   strategy:
     type: Recreate
   template:
@@ -60,8 +172,8 @@ spec:
         tier: mongo
     spec:
       containers:
-      - image: mongo:latest
-        name: mongo
+      - name: mongo
+        image: mongo:3
         imagePullPolicy: Always
         ports:
         - containerPort: 27017
@@ -74,27 +186,28 @@ metadata:
   labels:
     app: mongo
 spec:
+  type: NodePort
   ports:
-    - port: 27017
-      targetPort: 27017
+  - name: mongo
+    port: 27017
+    targetPort: 27017
   selector:
     app: mongo
     tier: mongo
-  type: NodePort
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
- name: puzzle
+  name: puzzle
 spec:
-  backend:
-    serviceName: puzzle
-    servicePort: 3000
   rules:
   - host: puzzle.192.168.99.100.xip.io
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: puzzle
-          servicePort: 3000
+          service:
+            name: puzzle
+            port:
+              name: puzzle

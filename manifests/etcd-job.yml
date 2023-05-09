@@ -1,17 +1,38 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: etcd-job
+# spec:
+#   template:
+#     metadata:
+#       name: etcd-job
+#     spec:
+#       containers:
+#       - name: etcd-job
+#         image: tenstartups/etcdctl
+#         # image: bitnami/etcd
+#         env:
+#           - name: ETCDCTL_ENDPOINT
+#             value: 'http://example-etcd-cluster-client-service:2379'
+#         command: ["etcdctl",  "mkdir", "pod-list"]
+#       restartPolicy: Never
+
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: etcd-job
+  name: etcd-job-v2
 spec:
   template:
     metadata:
-      name: etcd-job
+      name: etcd-job-v2
+      labels:
+        job-name: etcd-job-v2
     spec:
       containers:
       - name: etcd-job
         image: tenstartups/etcdctl
+        command: ["etcdctl", "mkdir", "pod-list"]
         env:
-          - name: ETCDCTL_ENDPOINT
-            value: 'http://example-etcd-cluster-client-service:2379'
-        command: ["etcdctl",  "mkdir", "pod-list"]
+        - name: ETCDCTL_ENDPOINT
+          value: "http://example-etcd-cluster-client-service:2379"
       restartPolicy: Never

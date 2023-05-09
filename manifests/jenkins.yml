@@ -437,8 +437,33 @@ spec:
         volumeMounts:
         - name: jenkins-persistent-storage
           mountPath: /var/jenkins_home
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
       volumes:
       - name: jenkins-persistent-storage
         persistentVolumeClaim:
           claimName: jenkins-claim
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      # - name: jenkins-plugins
+      #   configMap:
+      #     name: jenkins-plugins
 
+
+
+      #   volumeMounts:
+      #   - name: jenkins-persistent-storage
+      #     mountPath: /var/jenkins_home
+      #   - name: docker-sock
+      #     mountPath: /var/run/docker.sock
+      # volumes:
+      # - name: jenkins-persistent-storage
+      #   persistentVolumeClaim:
+      #     claimName: jenkins-claim
+      # - name: docker-sock
+      #   hostPath:
+      #     path: /var/run/docker.sock
+      # - name: jenkins-plugins
+      #   configMap:
+      #     name: jenkins-plugins
