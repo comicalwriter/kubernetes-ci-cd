@@ -47,7 +47,7 @@ pipeline {
                     def imageName = "${registryHost}${appName}:${tag}"
                     env.BUILDING = imageName
                     echo "Building image ${env.BUILDING}"
-                    sh "docker build -t ${imageName} -f applications/puzzle"
+                    sh "docker build -t ${imageName} -f applications/puzzle/Dockerfile applications/puzzle"
                     // sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
                 }
             }
