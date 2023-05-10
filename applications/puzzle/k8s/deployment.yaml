@@ -148,6 +148,7 @@ spec:
   - name: puzzle
     port: 3000
     targetPort: 3000
+    nodePort: 31120
   selector:
     app: puzzle
     tier: puzzle
@@ -179,6 +180,56 @@ spec:
         - containerPort: 27017
           name: mongo
 ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mongo
+#   labels:
+#     app: mongo
+# spec:
+#   type: NodePort
+#   ports:
+#   - name: mongo
+#     port: 27017
+#     targetPort: 27017
+#   selector:
+#     app: mongo
+#     tier: mongo
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: puzzle
+# spec:
+#   rules:
+#   # - host: puzzle.192.168.99.100.xip.io
+#   - host: puzzle.10.96.0.1.xip.io
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: puzzle
+#             port:
+#               number: 3000
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: puzzle
+# spec:
+#   rules:
+#   - host: puzzle.10.96.0.1.xip.io
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: puzzle
+#             port:
+#               number: 3000
 apiVersion: v1
 kind: Service
 metadata:
@@ -186,28 +237,29 @@ metadata:
   labels:
     app: mongo
 spec:
-  type: NodePort
   ports:
-  - name: mongo
-    port: 27017
-    targetPort: 27017
+    - port: 27017
+      targetPort: 27017
   selector:
     app: mongo
     tier: mongo
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: puzzle
-spec:
-  rules:
-  - host: puzzle.192.168.99.100.xip.io
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: puzzle
-            port:
-              name: puzzle
+  # type: NodePort
+  type: LoadBalancer
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: puzzle
+# spec:
+#   rules:
+#   # - host: puzzle.192.168.99.100.xip.io
+#   - host: puzzle.192.168.65.4.xip.io
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: puzzle
+#             port:
+#               number: 3000

@@ -1,12 +1,14 @@
 import io from 'socket.io-client';
-import constants from '../constants';
+// import constants from '../constants';
 import * as types from './actionTypes';
 
-const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io`;
+// const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io:32059`;
+const baseUrl = `http://127.0.0.1:3001`;
 const socket = io(baseUrl);
 
 export function getPods () {
   return dispatch => {
+    console.log(baseUrl)
     return fetch(`${baseUrl}/pods`)
       .then(resp => (
         resp.json()

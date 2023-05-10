@@ -1,0 +1,84 @@
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: Role
+# metadata:
+#   name: etcd-operator-role
+# rules:
+# - apiGroups:
+#   - etcd.database.coreos.com
+#   resources:
+#   - etcdclusters
+#   - etcdbackups
+#   - etcdrestores
+#   verbs:
+#   - '*'
+# - apiGroups:
+#   - ""
+#   resources:
+#   - pods
+#   - services
+#   - endpoints
+#   - persistentvolumeclaims
+#   - events
+#   verbs:
+#   - '*'
+# - apiGroups:
+#   - apps
+#   resources:
+#   - deployments
+#   verbs:
+#   - '*'
+# - apiGroups:
+#   - ""
+#   resources:
+#   - secrets
+#   verbs:
+#   - get
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: etcd-operator-role
+rules:
+- apiGroups:
+  - etcd.database.coreos.com
+  resources:
+  - etcdclusters
+  - etcdbackups
+  - etcdrestores
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: etcd-operator-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: etcd-operator-role
+subjects:
+- kind: User
+  name: default   # Replace with the actual username
+  apiGroup: rbac.authorization.k8s.io
