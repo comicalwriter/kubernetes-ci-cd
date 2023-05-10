@@ -38,7 +38,8 @@ pipeline {
         stage("Deploy") {
             steps {
                 script {
-                    sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${registryHost}${appName}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+                    sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#'$BUILDING'#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+                    // sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDING'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
                     sh "kubectl rollout status deployment/hello-kenzan"
                 }
             }

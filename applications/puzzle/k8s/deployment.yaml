@@ -121,6 +121,7 @@ spec:
         app: puzzle
         tier: puzzle
     spec:
+      restartPolicy: Always
       containers:
       - name: puzzle
         image: 127.0.0.1:30400/puzzle:93faf8a
