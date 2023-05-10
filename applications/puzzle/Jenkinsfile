@@ -67,7 +67,8 @@ pipeline {
                 script {
                     // echo "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDIMG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
                     // sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDIMG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
-                    sh "sed 's#127.0.0.1:30400/puzzle:latest#${registryHost}${appName}#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
+                    sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDING'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
+                    // sh "sed 's#127.0.0.1:30400/puzzle:latest#${registryHost}${appName}#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
                     sh "kubectl rollout status deployment/puzzle"
                 }
             }
