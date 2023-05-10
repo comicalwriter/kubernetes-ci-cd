@@ -1,26 +1,75 @@
-node {
+// node {
 
-    checkout scm
+//     checkout scm
 
-    env.DOCKER_API_VERSION="1.23"
+//     env.DOCKER_API_VERSION="1.23"
     
-    sh "git rev-parse --short HEAD > commit-id"
+//     sh "git rev-parse --short HEAD > commit-id"
 
-    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-    appName = "puzzle"
-    registryHost = "127.0.0.1:30400/"
-    imageName = "${registryHost}${appName}:${tag}"
-    env.BUILDIMG=imageName
+//     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+//     appName = "puzzle"
+//     registryHost = "127.0.0.1:30400/"
+//     imageName = "${registryHost}${appName}:${tag}"
+//     env.BUILDIMG=imageName
 
-    stage "Build"
+//     stage "Build"
     
-        sh "docker build -t ${imageName} applications/puzzle"
+//         sh "docker build -t ${imageName} applications/puzzle"
     
-    stage "Push"
+//     stage "Push"
 
-        sh "docker push ${imageName}"
+//         sh "docker push ${imageName}"
 
-    stage "Deploy"
+//     stage "Deploy"
         
-        sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDIMG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
+//         sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDIMG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
+// }
+
+pipeline {
+    agent any
+    environment {
+        DOCKER_API_VERSION = "1.41"
+        appName = "puzzle"
+        registryHost = "127.0.0.1:30400/"
+    }
+    stages {
+        stage("Checkout") {
+            steps {
+                checkout scm
+                sh "git rev-parse --short HEAD > commit-id"
+                // sh "apt-get update && apt-get install -y docker.io"
+            }
+        }
+        stage("Build") {
+            steps {
+                script {
+                    def tag = readFile('commit-id').trim()
+                    def imageName = "${registryHost}${appName}:${tag}"
+                    env.BUILDING = imageName
+                    echo "Building image ${env.BUILDING}"
+                    sh "docker build -t ${imageName} -f applications/puzzle"
+                    // sh "docker build -t ${imageName} -f applications/hello-kenzan/Dockerfile applications/hello-kenzan"
+                }
+            }
+        }
+
+        stage("Push") {
+            steps {
+                script {
+                    // sh "docker push ${registryHost}${appName}"
+                    sh "docker push ${env.BUILDING}"
+                }
+            }
+        }
+
+        stage("Deploy") {
+            steps {
+                script {
+                    sh "sed 's#127.0.0.1:30400/puzzle:latest#'$BUILDIMG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -"
+                    // sh "sed 's#127.0.0.1:30400/hello-kenzan:latest#${registryHost}${appName}#' applications/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+                    // sh "kubectl rollout status deployment/hello-kenzan"
+                }
+            }
+        }
+    }
 }
