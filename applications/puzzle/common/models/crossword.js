@@ -5,7 +5,7 @@ var Etcd = require('node-etcd')
 module.exports = function(Crossword) {
 
   var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
-  fireHit();
+  fireHit();                      
   Crossword.get = function(cb) {
     
     var etcdPuzzleResp = etcd.getSync("puzzle");
