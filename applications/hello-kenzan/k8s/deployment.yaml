@@ -50,7 +50,9 @@ spec:
   selector:
     app: hello-kenzan
     tier: hello-kenzan
-  type: NodePort
+  type: 
+  # type: NodePort
+  type: LoadBalancer
 
 ---
 apiVersion: apps/v1

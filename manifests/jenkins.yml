@@ -317,29 +317,30 @@
 #         persistentVolumeClaim:
 #           claimName: jenkins-claim
 
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: deployment-editor
+  name: service-patcher
 rules:
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch", "update", "patch"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["patch"]
 
 ---
+
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: deployment-editor-binding
+  name: service-patcher-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: deployment-editor
+  name: service-patcher
 subjects:
 - kind: ServiceAccount
   name: default
   namespace: default
+
 
 
 # apiVersion: rbac.authorization.k8s.io/v1
@@ -362,7 +363,7 @@ subjects:
 #   name: deployment-reader
 # subjects:
 # - kind: ServiceAccount
-#   name: default
+#   name: default 
 #   namespace: default
 
 ---
@@ -401,12 +402,13 @@ metadata:
     app: jenkins
 spec:
   ports:
-    - port: 80
+    - port: 81
       targetPort: 8080
   selector:
     app: jenkins
     tier: jenkins
-  type: NodePort
+  # type: NodePort
+  type: LoadBalancer
 
 ---
 apiVersion: apps/v1
@@ -429,7 +431,7 @@ spec:
     spec:
       containers:
       - name: jenkins
-        image: 127.0.0.1:30400/jenkins:lastest
+        image: 127.0.0.1:30400/jenkins:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
