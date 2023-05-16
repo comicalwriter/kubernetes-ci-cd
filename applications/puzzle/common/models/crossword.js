@@ -4,8 +4,8 @@ var Etcd = require('node-etcd')
 
 module.exports = function(Crossword) {
 
-  // var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
-  var etcd = new Etcd("http://host.docker.internal:2379");
+  var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
+  // var etcd = new Etcd("http://host.docker.internal:2379");
   fireHit();                      
   Crossword.get = function(cb) {
     
@@ -85,8 +85,8 @@ module.exports = function(Crossword) {
 
   function fireHit() {
     var podId = process.env.HOSTNAME;    
-    // var url = "http://monitor-scale:3001/hit/" + podId;
-    var url = "http://host.docker.internal:3001/hit/" + podId;
+    var url = "http://monitor-scale:3001/hit/" + podId;
+    // var url = "http://host.docker.internal:3001/hit/" + podId;
     request(url);
   }
 
