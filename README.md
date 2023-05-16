@@ -1,3 +1,17 @@
+## When we start with minikube we can use socat-registry to map registry through Nodeport
+# + docker run -d --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:host.docker.internal:5000(nodeport)"
+
+
+## doccuments reference: 
+#	+ https://www.linux.com/training-tutorials/set-cicd-distributed-crossword-puzzle-app-kubernetes-part-4/
+#	+ https://zerobig-k8s.tistory.com/25
+#	+ https://events.redhat.com/accounts/register123/redhat/events/701f20000012tgfaaq/11-Operator_Framework_Workshop_etcd_Operator.pdf (Follow it to resolve issue that relative to ETCD and scronjob)
+
+
+# After that we must change version etcd to according with API puzzle in at monitor-scale
+
+## NOTE: Can you check role and binding role also that account to authentication with kuberentes
+
 # Linux.com Kubernetes CI/CD Blog Series by Kenzan
 
  To generate this readme: `node readme.js`

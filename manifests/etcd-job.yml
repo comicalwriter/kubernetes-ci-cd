@@ -32,5 +32,7 @@ spec:
       containers:
         - name: etcd-job
           image: anldisr/etcdctl
-          command: ["etcdctl", "--endpoints=http://host.docker.internal:2379", "put", "/pod-list", ""]
+          # command: ["etcdctl", "--endpoints=http://host.docker.internal:2379", "put", "/pod-list", ""]
+          command: ["etcdctl", "--endpoints=http://example-etcd-cluster-client-service:2379", "put", "/pod-list", ""]
+          
       restartPolicy: Never
