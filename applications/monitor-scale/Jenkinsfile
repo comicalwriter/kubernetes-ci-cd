@@ -64,7 +64,7 @@ pipeline {
                 script {
                     // sh "sed 's#127.0.0.1:30400/kr8sswordz:latest#'$BUILDING'#' applications/kr8sswordz-pages/k8s/deployment.yaml | kubectl apply -f -"
                     sh "sed 's#127.0.0.1:30400/monitor-scale:latest#'$BUILDING'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -"
-                    sh "kubectl rollout status deployment/kr8sswordz"
+                    sh "kubectl rollout status deployment/monitor-scale"
                 }
             }
         }
