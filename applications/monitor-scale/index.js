@@ -46,7 +46,7 @@ app.post('/scale', function (req, res) {
     },
     status:{}
   };
-  Console.log("47")
+  console.log("47")
   putBody.spec.replicas = scale;
   console.log("This itoan fix")
   console.log(putBody)
