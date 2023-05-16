@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
-etcd = new Etcd("http://host.docker.internal:2379")
+etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
+// etcd = new Etcd("http://host.docker.internal:2379")
 
 var watcher = etcd.watcher("pod-list", null, {recursive: true})
 watcher.on("change", function(val) {
@@ -30,9 +30,7 @@ watcher.on("change", function(val) {
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
-  
   console.log('Count requested is: %s', scale);
-  console.log('33aaaaaaaaaaaaaaaaaaa')
   var url = "http://127.0.0.1:2345/apis/apps/v1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     // kind:"Scale",
@@ -49,12 +47,11 @@ app.post('/scale', function (req, res) {
   putBody.spec.replicas = scale;
   
   request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
-    console.log("inbody")
-    console.log(body)
-    
     if (err) {
       return console.error('Failed to scale:', err);
     }
+    console.log(body)   
+    
     console.log('Scale success!');
     res.send('success');
   });
