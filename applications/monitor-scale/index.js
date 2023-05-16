@@ -17,7 +17,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
+// etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
+etcd = new Etcd("http://host.docker.internal:2379")
 
 var watcher = etcd.watcher("pod-list", null, {recursive: true})
 watcher.on("change", function(val) {
@@ -29,6 +30,7 @@ watcher.on("change", function(val) {
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
+  Console.log("33")
   console.log('Count requested is: %s', scale);
   Console.log("33")
   var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
