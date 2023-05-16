@@ -44,13 +44,13 @@ app.post('/scale', function (req, res) {
     spec: {
       replicas:1
     },
-    status:{}
+    // status:{}
   };
   putBody.spec.replicas = scale;
   
   request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
     console.log("inbody")
-    console.log(body.data)
+    // console.log(body)
     
     if (err) {
       return console.error('Failed to scale:', err);
