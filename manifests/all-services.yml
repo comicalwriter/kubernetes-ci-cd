@@ -36,9 +36,9 @@ metadata:
     app: kr8sswordz
 spec:
   ports:
-    - port: 80
+    - port: 82
       targetPort: 3002
   selector:
     app: kr8sswordz
     tier: kr8sswordz
-  type: NodePort
+  type: LoadBalancer

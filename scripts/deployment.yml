@@ -1,12 +1,43 @@
+# # # apiVersion: apps/v1
+# # # kind: Deploymentkube
+# # # metadata:
+# # #   name: etcd-operator
+# # # spec:
+# # #   replicas: 1
+# # #   selector:
+# # #     matchLabels:
+# # #       app: etcd-operator
+# # #   template:
+# # #     metadata:
+# # #       labels:
+# # #         name: etcd-operator
+# # #     spec:
+# # #       containers:
+# # #       - name: etcd-operator
+# # #         image: quay.io/coreos/etcd-operator:v0.9.4
+# # #         command:
+# # #         - etcd-operator
+# # #         # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+# # #         #- -cluster-wide
+# # #         env:
+# # #         - name: MY_POD_NAMESPACE
+# # #           valueFrom:
+# # #             fieldRef:
+# # #               fieldPath: metadata.namespace
+# # #         - name: MY_POD_NAME
+# # #           valueFrom:
+# # #             fieldRef:
+# # #               fieldPath: metadata.name
+
 # # apiVersion: apps/v1
-# # kind: Deploymentkube
+# # kind: Deployment
 # # metadata:
 # #   name: etcd-operator
 # # spec:
 # #   replicas: 1
 # #   selector:
 # #     matchLabels:
-# #       app: etcd-operator
+# #       name: etcd-operator
 # #   template:
 # #     metadata:
 # #       labels:
@@ -28,6 +59,67 @@
 # #           valueFrom:
 # #             fieldRef:
 # #               fieldPath: metadata.name
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: etcd
+# spec:
+#   serviceName: etcd
+#   replicas: 3
+#   selector:
+#     matchLabels:
+#       app: etcd
+#   template:
+#     metadata:
+#       labels:
+#         app: etcd
+#     spec:
+#       containers:
+#       - name: etcd
+#         image: quay.io/coreos/etcd:v3.4.15
+#         command:
+#         - etcd
+#         - --advertise-client-urls=http://$(POD_IP):2379
+#         - --listen-client-urls=http://0.0.0.0:2379
+#         - --initial-advertise-peer-urls=http://$(POD_IP):2380
+#         - --listen-peer-urls=http://0.0.0.0:2380
+#         - --initial-cluster-state=new
+#         - --initial-cluster=etcd-0=http://etcd-0.etcd.default.svc.cluster.local:2380,etcd-1=http://etcd-1.etcd.default.svc.cluster.local:2380,etcd-2=http://etcd-2.etcd.default.svc.cluster.local:2380
+#         - --initial-cluster-token=my-etcd-token
+#         - --name=$(POD_NAME)
+#         env:
+#         - name: POD_IP
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: status.podIP
+#         - name: POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+#         ports:
+#         - containerPort: 2379
+#           name: client
+#         - containerPort: 2380
+#           name: peer
+#         volumeMounts:
+#         - mountPath: /etcd-data
+#           name: etcd-data
+#       volumes:
+#       - name: etcd-data
+#         emptyDir: {}
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: etcd
+# spec:
+#   selector:
+#     app: etcd
+#   ports:
+#     - port: 2379
+#       targetPort: client
+#   type: LoadBalancer
 
 # apiVersion: apps/v1
 # kind: Deployment
@@ -60,62 +152,199 @@
 #             fieldRef:
 #               fieldPath: metadata.name
 
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: etcd-operator
+# spec:
+#   selector:
+#     matchLabels:
+#       app: etcd-operator
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: etcd-operator
+#     spec:
+#       containers:
+#       - name: etcd-operator
+#         image: quay.io/coreos/etcd-operator:v0.9.4
+#         command:
+#         - etcd-operator
+#         # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+#         #- -cluster-wide
+#         env:
+#         - name: MY_POD_NAMESPACE
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.namespace
+#         - name: MY_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: etcd-operator
+#   # namespace: test
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         name: etcd-operator
+#     spec:
+#       serviceAccountName: etcd-operator
+#       containers:
+#       - name: etcd-operator
+#         image: quay.io/coreos/etcd-operator:v0.9.4
+#         env:
+#         - name: MY_POD_NAMESPACE
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.namespace
+#         - name: MY_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+
+
+# apiVersion: extensions/v1beta1
+# apiVersion:  apps/v1
+# kind: Deployment
+# metadata:
+#   name: etcd-operator
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       name: etcd-operator
+#   template:
+#     metadata:
+#       labels:
+#         name: etcd-operator
+#     spec:
+#       containers:
+#       - name: etcd-operator
+#         image: quay.io/coreos/etcd-operator:v0.9.4
+#         command:
+#         - etcd-operator
+#         # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+#         #- -cluster-wide
+#         env:
+#         - name: MY_POD_NAMESPACE
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.namespace
+#         - name: MY_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: etcd-operator
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       name: etcd-operator
+#   template:
+#     metadata:
+#       labels:
+#         name: etcd-operator
+#     spec:
+#       containers:
+#       - name: etcd-operator
+#         image: quay.io/coreos/etcd-operator:v0.9.4
+#         command:
+#         - etcd-operator
+#         # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+#         - -cluster-wide
+#         env:
+#         - name: default
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.namespace
+#         - name: default
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+# name: etcd-operator
+# labels:
+#   name: etcd-operator
+# spec:
+#   selector:
+#     matchLabels:
+#     name: etcd-operator
+# replicas: 1
+# template:
+#   metadata:
+#   labels:
+#     name: etcd-operator
+#   spec:
+#   containers:
+#      - name: etcd-operator
+#        image: quay.io/coreos/etcd-operator:v0.9.4
+#        command:
+#        - etcd-operator
+#        - --create-crd=false
+#        # Uncomment to act for resources in all namespaces. More information in doc/user/clusterwide.md
+#        #- -cluster-wide
+#        env:
+#        - name: MY_POD_NAMESPACE
+#          valueFrom:
+#            fieldRef:
+#              apiVersion: v1
+#              fieldPath: metadata.namespace
+#        - name: MY_POD_NAME
+#          valueFrom:
+#            fieldRef:
+#              apiVersion: v1
+#              fieldPath: metadata.name
+#      serviceAccountName: etcd-operator-sa
+
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: etcd
+  labels:
+    name: etcd-operator
+  name: etcd-operator
 spec:
-  serviceName: etcd
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: etcd
+      name: etcd-operator
   template:
     metadata:
       labels:
-        app: etcd
+        name: etcd-operator
     spec:
       containers:
-      - name: etcd
-        image: quay.io/coreos/etcd:v3.4.15
-        command:
-        - etcd
-        - --advertise-client-urls=http://$(POD_IP):2379
-        - --listen-client-urls=http://0.0.0.0:2379
-        - --initial-advertise-peer-urls=http://$(POD_IP):2380
-        - --listen-peer-urls=http://0.0.0.0:2380
-        - --initial-cluster-state=new
-        - --initial-cluster=etcd-0=http://etcd-0.etcd.default.svc.cluster.local:2380,etcd-1=http://etcd-1.etcd.default.svc.cluster.local:2380,etcd-2=http://etcd-2.etcd.default.svc.cluster.local:2380
-        - --initial-cluster-token=my-etcd-token
-        - --name=$(POD_NAME)
+      - command:
+        - etcd-operator
+        - --create-crd=false
         env:
-        - name: POD_IP
+        - name: MY_POD_NAMESPACE
           valueFrom:
             fieldRef:
-              fieldPath: status.podIP
-        - name: POD_NAME
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
           valueFrom:
             fieldRef:
+              apiVersion: v1
               fieldPath: metadata.name
-        ports:
-        - containerPort: 2379
-          name: client
-        - containerPort: 2380
-          name: peer
-        volumeMounts:
-        - mountPath: /etcd-data
-          name: etcd-data
-      volumes:
-      - name: etcd-data
-        emptyDir: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: etcd
-spec:
-  selector:
-    app: etcd
-  ports:
-    - port: 2379
-      targetPort: client
+        image: quay.io/coreos/etcd-operator:v0.9.4
+        imagePullPolicy: IfNotPresent
+        name: etcd-operator
+      serviceAccountName: etcd-operator-sa

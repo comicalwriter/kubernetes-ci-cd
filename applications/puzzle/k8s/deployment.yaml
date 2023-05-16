@@ -124,15 +124,15 @@ spec:
       restartPolicy: Always
       containers:
       - name: puzzle
-        image: 127.0.0.1:30400/puzzle:93faf8a
+        image: 127.0.0.1:30400/puzzle:e511f27
         imagePullPolicy: Always
-        # lifecycle:
-        #   postStart:
-        #     exec:
-        #       command: ["/up.sh"]
-        #   preStop:
-        #     exec:
-        #       command: ["/down.sh"]
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/usr/src/app/up.sh"]
+          preStop:
+            exec:
+              command: ["/usr/src/app/down.sh"]
         ports:
         - containerPort: 3000
           name: puzzle
@@ -153,6 +153,7 @@ spec:
   selector:
     app: puzzle
     tier: puzzle
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment

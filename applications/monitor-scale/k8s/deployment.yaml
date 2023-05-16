@@ -102,7 +102,7 @@ spec:
     spec:
       containers:
       - name: monitor-scale
-        image: 127.0.0.1:30400/monitor-scale:93faf8a
+        image: 127.0.0.1:30400/monitor-scale:1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 3001

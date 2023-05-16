@@ -30,7 +30,7 @@ watcher.on("change", function(val) {
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
   console.log('Count requested is: %s', scale);
-  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
+  var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     kind:"Scale",
     apiVersion:"extensions/v1beta1",
@@ -46,6 +46,8 @@ app.post('/scale', function (req, res) {
   putBody.spec.replicas = scale;
 
   request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
+    console.log(body)
+    console.log(httpResponse)
     if (err) {
       return console.error('Failed to scale:', err);
     }
