@@ -33,24 +33,24 @@ app.post('/scale', function (req, res) {
   
   console.log('Count requested is: %s', scale);
   console.log('33aaaaaaaaaaaaaaaaaaa')
-  var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
+  var url = "http://host.docker.internal:2345/apis/apps/v1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     // kind:"Scale",
     // apiVersion:"extensions/v1beta1",
-    // metadata: { 
-    //   name:"puzzle",
-    //   namespace:"default"
-    // },
+    metadata: { 
+      name:"puzzle",
+      namespace:"default"
+    },
     spec: {
       replicas:1
     },
-    // status:{}
+    status:{}
   };
   putBody.spec.replicas = scale;
   
   request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
     console.log("inbody")
-    // console.log(body)
+    console.log(body)
     
     if (err) {
       return console.error('Failed to scale:', err);
