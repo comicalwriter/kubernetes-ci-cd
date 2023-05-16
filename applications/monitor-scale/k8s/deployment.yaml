@@ -103,7 +103,7 @@ spec:
       serviceAccountName: kubectl-api-sa
       containers:
       - name: monitor-scale
-        image: 127.0.0.1:30400/monitor-scale:1.0
+        image: 127.0.0.1:30400/monitor-scale:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3001
