@@ -32,7 +32,7 @@ app.post('/scale', function (req, res) {
   var scale = req.body.count;
   
   console.log('Count requested is: %s', scale);
-  Console.log('33aaaaaaaaaaaaaaaaaaa')
+  console.log('33aaaaaaaaaaaaaaaaaaa')
   var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
   // var putBody = {
   //   // kind:"Scale",
