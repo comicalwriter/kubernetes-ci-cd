@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var request = require('request');
 var async = require('async');
 var io = require('socket.io')(http);
-var path    = require("path");
+var path = require("path");
 var Etcd = require('node-etcd')
 var cors = require('cors');
 
@@ -35,12 +35,12 @@ app.post('/scale', function (req, res) {
   Console.log("33")
   var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
-    kind:"Scale",
-    apiVersion:"extensions/v1beta1",
-    metadata: { 
-      name:"puzzle",
-      namespace:"default"
-    },
+    // kind:"Scale",
+    // apiVersion:"extensions/v1beta1",
+    // metadata: { 
+    //   name:"puzzle",
+    //   namespace:"default"
+    // },
     spec: {
       replicas:1
     },
@@ -65,7 +65,8 @@ app.post('/loadtest/concurrent', function (req, res) {
 
   var count = req.body.count;
   console.log('Count requested is: %s', count);
-  var url = "http://puzzle:3000/puzzle/v1/crossword";
+  // var url = "http://puzzle:3000/puzzle/v1/crossword";
+  var url = "http://host.docker.internal:3000/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
     myUrls.push(url);
@@ -87,7 +88,8 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
   
   var count = req.body.count;
-  var url = "http://puzzle:3000/puzzle/v1/crossword";
+  // var url = "http://puzzle:3000/puzzle/v1/crossword";
+  var url = "http://host.docker.internal:3000/puzzle/v1/crossword";
   var callArray = [];
 
   for (var i = 0; i < req.body.count; i++) {
