@@ -33,7 +33,7 @@ app.post('/scale', function (req, res) {
   
   console.log('Count requested is: %s', scale);
   console.log('33aaaaaaaaaaaaaaaaaaa')
-  var url = "http://host.docker.internal:2345/apis/apps/v1/namespaces/default/deployments/puzzle/scale";
+  var url = "http://127.0.0.1:2345/apis/apps/v1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     // kind:"Scale",
     // apiVersion:"extensions/v1beta1",
