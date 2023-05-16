@@ -34,31 +34,32 @@ app.post('/scale', function (req, res) {
   console.log('Count requested is: %s', scale);
   Console.log('33aaaaaaaaaaaaaaaaaaa')
   var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
-  var putBody = {
-    // kind:"Scale",
-    // apiVersion:"extensions/v1beta1",
-    // metadata: { 
-    //   name:"puzzle",
-    //   namespace:"default"
-    // },
-    spec: {
-      replicas:1
-    },
-    status:{}
-  };
-  Console.log("47")
-  putBody.spec.replicas = scale;
-  console.log("This itoan fix")
-  console.log(putBody)
-  request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
-    console.log(body)
-    console.log(httpResponse)
-    if (err) {
-      return console.error('Failed to scale:', err);
-    }
-    console.log('Scale success!');
-    res.send('success');
-  });
+  // var putBody = {
+  //   // kind:"Scale",
+  //   // apiVersion:"extensions/v1beta1",
+  //   // metadata: { 
+  //   //   name:"puzzle",
+  //   //   namespace:"default"
+  //   // },
+  //   spec: {
+  //     replicas:1
+  //   },
+  //   status:{}
+  // };
+  // Console.log("47")
+  // putBody.spec.replicas = scale;
+  // console.log("This itoan fix")
+  // console.log(putBody)
+  // request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
+  //   console.log(body)
+  //   console.log(httpResponse)
+  //   if (err) {
+  //     return console.error('Failed to scale:', err);
+  //   }
+  //   console.log('Scale success!');
+  //   res.send('success');
+  // });
+  res.send('success');
 });
 
 app.post('/loadtest/concurrent', function (req, res) {
