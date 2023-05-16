@@ -100,6 +100,7 @@ spec:
         app: monitor-scale
         tier: monitor-scale
     spec:
+      serviceAccountName: kubectl-api-sa
       containers:
       - name: monitor-scale
         image: 127.0.0.1:30400/monitor-scale:1.0
