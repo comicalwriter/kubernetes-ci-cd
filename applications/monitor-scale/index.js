@@ -30,6 +30,7 @@ watcher.on("change", function(val) {
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
   console.log('Count requested is: %s', scale);
+  Console.log("33")
   var url = "http://host.docker.internal:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     kind:"Scale",
@@ -43,6 +44,7 @@ app.post('/scale', function (req, res) {
     },
     status:{}
   };
+  Console.log("47")
   putBody.spec.replicas = scale;
   console.log("This itoan fix")
   console.log(putBody)
